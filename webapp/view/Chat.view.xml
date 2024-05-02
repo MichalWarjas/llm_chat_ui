@@ -1,0 +1,34 @@
+<mvc:View
+    controllerName="mw.osllm.chat.controller.Chat"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+>
+    <Shell id="shell">
+        <App id="app">
+            <pages>
+                <Page id="page" title="{i18n>title}">
+                    <content>
+                    	<FeedInput id="_IDGenFeedInput1"
+		post="onPost"
+		icon="test-resources/sap/m/images/dronning_victoria.jpg"
+		class="sapUiSmallMarginTopBottom" />
+	<List id="_IDGenList1"
+		showSeparators="Inner"
+		items="{/EntryCollection}" >
+		<FeedListItem id="_IDGenFeedListItem1"
+			sender="{Author}"
+			icon="{AuthorPicUrl}"
+			senderPress="onSenderPress"
+			iconPress="onIconPress"
+			info="{Type}"
+			timestamp="{Date}"
+			text="{Text}"
+			convertLinksToAnchorTags="All"/>
+	</List>
+                    </content>
+                </Page>
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>
