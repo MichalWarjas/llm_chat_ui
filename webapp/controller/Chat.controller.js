@@ -1,16 +1,16 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller"
+    "sap/ui/core/mvc/Controller",
+    "sap/m/MessageToast",
+	"sap/ui/core/format/DateFormat",
+	"sap/ui/model/json/JSONModel",
+    "sap/m/MessageBox"
 ],
-    /**
-     * @param {typeof sap.ui.core.mvc.Controller} Controller
-     */
-    function (Controller) {
+    function (Controller, MessageToast, DateFormat, JSONModel, MessageBox) {
         "use strict";
 
         return Controller.extend("mw.osllm.chat.controller.Chat", {
             onInit: function () {
-                var sPath = sap.ui.require.toUrl("sap/m/sample/Feed/feed.json");
-                var oModel = new JSONModel(sPath);
+                var oModel = new JSONModel();
                 this.getView().setModel(oModel);
             },
             onPost: function(oEvent) {

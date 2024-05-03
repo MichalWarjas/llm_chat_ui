@@ -40,17 +40,19 @@
   },
   "sap.ui5": {
     "flexEnabled": true,
+    "rootView": {
+      "viewName": "mw.osllm.chat.view.Chat",
+      "type": "XML",
+      "async": true,
+      "id": "Chat"
+    },
     "dependencies": {
       "minUI5Version": "1.123.1",
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
         "sap.f": {},
-        "sap.suite.ui.generic.template": {},
-        "sap.ui.comp": {},
-        "sap.ui.generic.app": {},
-        "sap.ui.table": {},
-        "sap.ushell": {}
+        "sap.ui.table": {}
       }
     },
     "contentDensities": {
@@ -111,12 +113,6 @@
           "viewName": "Chat"
         }
       }
-    },
-    "rootView": {
-      "viewName": "mw.osllm.chat.view.Chat",
-      "type": "XML",
-      "async": true,
-      "id": "Chat"
     }
   }
 }
