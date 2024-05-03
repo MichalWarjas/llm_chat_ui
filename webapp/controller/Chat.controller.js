@@ -14,6 +14,9 @@ sap.ui.define([
                 this.getView().setModel(oModel);
             },
             fetchExternalData: async function(question) {
+                var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
+                var oDate = new Date();
+                var sDate = oFormat.format(oDate);
                 try {
                   const response = await fetch("http://127.0.0.1:8000/generate",{
                     method: 'POST',
@@ -22,8 +25,28 @@ sap.ui.define([
                     },
                     body: JSON.stringify(question),
                   });
-                  const data = await response.json();
-                  console.log(data);
+                  const aiResponse = await response.json();
+                  const { generated_response } = aiResponse;
+                  console.log(aiResponse);
+                  var oEntry = {
+                    Author: "Skynet",
+                    AuthorPicUrl: "./pictures/helpful_assistant.jpg",
+                    Type: "Reply",
+                    Date: "" + sDate,
+                    Text: generated_response
+                };
+    
+                // update model
+                var oModel = this.getView().getModel();
+                var aEntries = oModel.getData().EntryCollection;
+                if(aEntries && aEntries.length > 0){
+                aEntries.unshift(oEntry);
+                }else{
+                aEntries = [oEntry];
+                }
+                oModel.setData({
+                    EntryCollection: aEntries
+                });
                 } catch (error) {
                   console.error('Failed to fetch external data', error);
                 }
@@ -34,10 +57,11 @@ sap.ui.define([
                 var sDate = oFormat.format(oDate);
                 // create new entry
                 var sValue = oEvent.getParameter("value");
-                this.fetchExternalData(sValue);
+                const myQuestion = {"user_input": sValue}
+                this.fetchExternalData(myQuestion);
                 var oEntry = {
-                    Author: "Alexandrina Victoria",
-                    AuthorPicUrl: "http://upload.wikimedia.org/wikipedia/commons/a/aa/Dronning_victoria.jpg",
+                    Author: "Curious user",
+                    AuthorPicUrl: "./pictures/john_conor.jpg",
                     Type: "Reply",
                     Date: "" + sDate,
                     Text: sValue
