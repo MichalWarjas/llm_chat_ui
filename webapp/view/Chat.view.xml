@@ -10,7 +10,7 @@
                     <content>
                     	<FeedInput id="_IDGenFeedInput1"
 		post="onPost"
-		icon="test-resources/sap/m/images/dronning_victoria.jpg"
+		icon="./pictures/john_conort.jpg"
 		class="sapUiSmallMarginTopBottom" />
 	<List id="_IDGenList1"
 		showSeparators="Inner"
