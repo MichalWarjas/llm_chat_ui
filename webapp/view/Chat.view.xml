@@ -11,7 +11,8 @@
                     	<FeedInput id="_IDGenFeedInput1"
 		post="onPost"
 		icon="./pictures/john_conor.jpg"
-		class="sapUiSmallMarginTopBottom" />
+		class="sapUiSmallMarginTopBottom"
+		placeholder="Post your question here" />
 	<List id="feedList"
 		showSeparators="Inner"
 		items="{/EntryCollection}"
@@ -21,6 +22,8 @@
 			icon="{AuthorPicUrl}"
 			senderPress="onSenderPress"
 			iconPress="onIconPress"
+			maxCharacters="5000"
+			moreLabel="Show full answer"
 			info="{Type}"
 			timestamp="{Date}"
 			text="{Text}"
