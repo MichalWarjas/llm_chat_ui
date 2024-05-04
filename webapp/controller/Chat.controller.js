@@ -11,9 +11,20 @@ sap.ui.define([
         return Controller.extend("mw.osllm.chat.controller.Chat", {
             onInit: function () {
                 var oModel = new JSONModel();
+                var oSettingsModel = new JSONModel({new_topic: false, busy: false})
                 this.getView().setModel(oModel);
+                this.getView().setModel(oSettingsModel, "settings");
+            },
+            resetChat: function(){
+               const oModel = this.getView().getModel();
+               const oSettingsModel = this.getView().getModel("settings");
+                oModel.setData({
+                    EntryCollection: []
+                });
+                oSettingsModel.setProperty("/new_topic", true);
             },
             fetchExternalData: async function(question) {
+                var oSettingsModel = this.getView().getModel("settings");
                 var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
                 var oDate = new Date();
                 var sDate = oFormat.format(oDate);
@@ -47,17 +58,26 @@ sap.ui.define([
                 oModel.setData({
                     EntryCollection: aEntries
                 });
+                oSettingsModel.setProperty("/busy", false);
                 } catch (error) {
+                oSettingsModel.setProperty("/busy", false);
                   console.error('Failed to fetch external data', error);
                 }
               },           
             onPost: function(oEvent) {
+                var oSettingsModel = this.getView().getModel("settings");
                 var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
                 var oDate = new Date();
                 var sDate = oFormat.format(oDate);
                 // create new entry
                 var sValue = oEvent.getParameter("value");
-                const myQuestion = {"user_input": sValue}
+                let new_topic = oSettingsModel.getProperty("/new_topic");
+                const myQuestion = {"user_input": sValue, "new_topic": new_topic};
+
+                if(new_topic){
+                    oSettingsModel.setProperty("/new_topic", false);
+                }
+                oSettingsModel.setProperty("/busy", true);
                 this.fetchExternalData(myQuestion);
                 var oEntry = {
                     Author: "Curious user",

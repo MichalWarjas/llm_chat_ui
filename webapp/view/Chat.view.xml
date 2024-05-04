@@ -10,11 +10,12 @@
                     <content>
                     	<FeedInput id="_IDGenFeedInput1"
 		post="onPost"
-		icon="./pictures/john_conort.jpg"
+		icon="./pictures/john_conor.jpg"
 		class="sapUiSmallMarginTopBottom" />
-	<List id="_IDGenList1"
+	<List id="feedList"
 		showSeparators="Inner"
-		items="{/EntryCollection}" >
+		items="{/EntryCollection}"
+		busy="{settings>/busy}">
 		<FeedListItem id="_IDGenFeedListItem1"
 			sender="{Author}"
 			icon="{AuthorPicUrl}"
@@ -23,7 +24,12 @@
 			info="{Type}"
 			timestamp="{Date}"
 			text="{Text}"
-			convertLinksToAnchorTags="All"/>
+			convertLinksToAnchorTags="All">
+			<actions>
+			<FeedListItemAction id="_IDGenFeedListItemAction1" key="new_input" text="Reset conversation" press="resetChat">
+			</FeedListItemAction>
+			</actions>
+			</FeedListItem>
 	</List>
                     </content>
                 </Page>
