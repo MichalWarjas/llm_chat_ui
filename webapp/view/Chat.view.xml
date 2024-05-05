@@ -1,18 +1,37 @@
 <mvc:View
     controllerName="mw.osllm.chat.controller.Chat"
     xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
     displayBlock="true"
     xmlns="sap.m"
 >
         <App id="app">
             <pages>
                 <Page id="page" title="{i18n>title}">
+		<headerContent>
+		<OverflowToolbar id="_IDGenOverflowToolbar1">
+		<Label id="_IDGenLabel1" text="Model" labelFor="modelSelect"></Label>
+		<Select		id="modelSelect"
+					forceSelection="false"
+					selectedKey="{models>/SelectedModel}"
+					items="{
+						path: 'models>/ModelCollection',
+						sorter: { path: 'models>Name' }
+					}">
+					<core:Item id="_IDGenItem1" key="{models>ModelId}" text="{models>Name}" />
+				</Select>
+		<Button id="_loadButton" text="Load model" press="loadModel"/>
+		<ToolbarSeparator id="_IDGenToolbarSeparator1" />
+		<Button id="_resetButton" text="Reset conversation" press="resetChat"/>
+		</OverflowToolbar>
+		</headerContent>
                     <content>
                     	<FeedInput id="_IDGenFeedInput1"
 		post="onPost"
 		icon="./pictures/john_conor.jpg"
 		class="sapUiSmallMarginTopBottom"
-		placeholder="Post your question here" />
+		placeholder="Post your question here"
+		enabled="{settings>/loaded}"/>
 	<List id="feedList"
 		showSeparators="Inner"
 		items="{/EntryCollection}"
@@ -28,10 +47,6 @@
 			timestamp="{Date}"
 			text="{Text}"
 			convertLinksToAnchorTags="All">
-			<actions>
-			<FeedListItemAction id="_IDGenFeedListItemAction1" key="new_input" text="Reset conversation" press="resetChat">
-			</FeedListItemAction>
-			</actions>
 			</FeedListItem>
 	</List>
                     </content>
