@@ -11,7 +11,7 @@ sap.ui.define([
         return Controller.extend("mw.osllm.chat.controller.Chat", {
             onInit: function () {
                 var oModel = new JSONModel();
-                var oSettingsModel = new JSONModel({ new_topic: true, busy: false, loaded: false })
+                var oSettingsModel = new JSONModel({ new_topic: true, busy: true, loaded: false })
                 this.getView().setModel(oModel);
                 this.getView().setModel(oSettingsModel, "settings");
 
@@ -30,6 +30,37 @@ sap.ui.define([
                 };
 
                 this.getView().setModel(new JSONModel(oModelData), "models")
+            },
+            onAfterRendering: function(oEvent){
+                const oSettingsModel = this.getView().getModel("settings");
+                const oModelsModel = this.getView().getModel("models");
+      
+                  fetch("http://127.0.0.1:8000/status", {
+                        method: 'GET'}).then((response) =>{
+                        response.json().then( (startResult) => {
+                            const { Status, modelName } = startResult;
+                            if (Status === "Initialized") {
+                                oSettingsModel.setProperty("/busy", false);
+                                oSettingsModel.setProperty("/loaded", true);
+                                oModelsModel.setProperty("/SelectedModel",modelName);
+                                MessageToast.show(`Model ${modelName} loaded`);
+                            } else {
+                                oSettingsModel.setProperty("/busy", false);
+                                MessageToast.show(`Model status is ${Status}. Please load a model `);
+                            }
+                     } ).catch(
+                            (error) => {
+                                oSettingsModel.setProperty("/busy", false);
+                                console.error('Failed to fetch external data', error);
+                                MessageToast.show(`Failed to fetch external data ${error}`);
+                            }
+                        );
+                  
+                    }).catch( (error) => {
+                    oSettingsModel.setProperty("/busy", false);
+                    console.error('Failed to fetch external data', error);
+                    MessageToast.show(`Failed to fetch external data ${error}`);
+                });
             },
             resetChat: function () {
                 const oModel = this.getView().getModel();
@@ -85,7 +116,7 @@ sap.ui.define([
                     const { generated_response } = aiResponse;
                     console.log(aiResponse);
                     var oEntry = {
-                        Author: "Skynet",
+                        Author: "Helpful assistant",
                         AuthorPicUrl: "./pictures/helpful_assistant.jpg",
                         Type: "Reply",
                         Date: "" + sDate,
