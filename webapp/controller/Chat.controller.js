@@ -176,6 +176,32 @@ sap.ui.define([
                     EntryCollection: aEntries
                 });
             },
+            onInitializeModel: async function(oEvent){
+                var oSettingsModel = this.getView().getModel("settings");
+                try {
+                    const response = await fetch("http://127.0.0.1:8000/initialize", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    const initResult = await response.json();
+                    const { Initialized } = initResult;
+                    if (Initialized == "true") {
+                        oSettingsModel.setProperty("/busy", false);
+                        oSettingsModel.setProperty("/loaded", false);
+                        MessageToast.show("Model has been initialized");
+                    } else {
+                        MessageBox.error("Something went wrong");
+                        oSettingsModel.setProperty("/busy", false);
+                        console.error(initResult) ;
+                    }
+                } catch (error) {
+                    oSettingsModel.setProperty("/busy", false);
+                    console.error('Failed to fetch external data', error);
+                    MessageToast.show(`Failed to fetch external data ${error}`);
+                }
+            },
 
             onSenderPress: function (oEvent) {
                 MessageToast.show("Clicked on Link: " + oEvent.getSource().getSender());

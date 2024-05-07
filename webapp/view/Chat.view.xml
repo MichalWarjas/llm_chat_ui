@@ -23,6 +23,8 @@
 		<Button id="_loadButton" text="Load model" press="loadModel"/>
 		<ToolbarSeparator id="_IDGenToolbarSeparator1" />
 		<Button id="_resetButton" text="Reset conversation" press="resetChat"/>
+		<ToolbarSeparator id="_IDGenToolbarSeparator2" ></ToolbarSeparator>
+		<Button id="_IDGenButton1"  text="Initialize model" press=".onInitializeModel" type="Reject"></Button>
 		</OverflowToolbar>
 		</headerContent>
                     <content>
