@@ -191,6 +191,7 @@ sap.ui.define([
                         oSettingsModel.setProperty("/busy", false);
                         oSettingsModel.setProperty("/loaded", false);
                         MessageToast.show("Model has been initialized");
+                        resetChat()
                     } else {
                         MessageBox.error("Something went wrong");
                         oSettingsModel.setProperty("/busy", false);
