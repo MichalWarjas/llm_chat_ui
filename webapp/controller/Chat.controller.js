@@ -25,6 +25,14 @@ sap.ui.define([
                         {
                             "ModelId": "models/8B/dolphin-2.9-llama3-8b-q8_0.gguf",
                             "Name": "dolphin-2.9-llama3-8b-q8_0.gguf"
+                        },
+                        {
+                            "ModelId": "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf",
+                            "Name": "mistral-7b-instruct-v0.2.Q5_K_M.gguf"
+                        },
+                        {
+                            "ModelId": "models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf",
+                            "Name": "bielik-7b-instruct-v0.1.Q8_0.gguf"
                         }
                     ]
                 };
@@ -191,7 +199,7 @@ sap.ui.define([
                         oSettingsModel.setProperty("/busy", false);
                         oSettingsModel.setProperty("/loaded", false);
                         MessageToast.show("Model has been initialized");
-                        resetChat()
+                        this.resetChat()
                     } else {
                         MessageBox.error("Something went wrong");
                         oSettingsModel.setProperty("/busy", false);
