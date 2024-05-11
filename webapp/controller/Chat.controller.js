@@ -43,7 +43,7 @@ sap.ui.define([
                 const oSettingsModel = this.getView().getModel("settings");
                 const oModelsModel = this.getView().getModel("models");
       
-                  fetch("http://127.0.0.1:8000/status", {
+                  fetch("/status", {
                         method: 'GET'}).then((response) =>{
                         response.json().then( (startResult) => {
                             const { Status, modelName } = startResult;
@@ -83,7 +83,7 @@ sap.ui.define([
                 var oSettingsModel = this.getView().getModel("settings");
                 oSettingsModel.setProperty("/busy", true);
                 try {
-                    const response = await fetch("http://127.0.0.1:8000/loadmodel", {
+                    const response = await fetch("/loadmodel", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ sap.ui.define([
                 var oDate = new Date();
                 var sDate = oFormat.format(oDate);
                 try {
-                    const response = await fetch("http://127.0.0.1:8000/generate", {
+                    const response = await fetch("/generate", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ sap.ui.define([
             onInitializeModel: async function(oEvent){
                 var oSettingsModel = this.getView().getModel("settings");
                 try {
-                    const response = await fetch("http://127.0.0.1:8000/initialize", {
+                    const response = await fetch("/initialize", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
