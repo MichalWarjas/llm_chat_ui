@@ -9,6 +9,12 @@ sap.ui.define([
         "use strict";
 
         return Controller.extend("mw.osllm.chat.controller.Chat", {
+
+            countdown: 5000,
+            intervalHandle: null,
+
+
+
             onInit: function () {
                 var oModel = new JSONModel();
                 var oSettingsModel = new JSONModel({ new_topic: true, busy: true, loaded: false })
@@ -40,6 +46,39 @@ sap.ui.define([
                 this.getView().setModel(new JSONModel(oModelData), "models")
             },
             onAfterRendering: function(oEvent){
+                this.getStatus(false,false);
+            },
+
+            restartStatusTimer: function(firstTime){
+              console.log("Session Timer will be reset");
+              if(this.intervalHandle != null){
+                this.stopStatusTimer();
+                this.startStatusTimer(firstTime);
+              }else{
+                this.startStatusTimer();
+              }
+            },
+            startStatusTimer: function(firstTime){
+                this.intervalHandle = setInterval(() =>{
+                    this._statusCountdown(firstTime);
+                    console.log("fetching new status");
+
+                }, this.countdown);
+                
+                let iSeconds = this.countdown / 1000;
+                console.log(`New status will be fetched in ${iSeconds} seconds`);
+            },
+            stopStatusTimer: function(){
+                if(this.intervalHandle != null){
+                    clearInterval(this.intervalHandle);
+                    this.intervalHandle = null;
+                    console.log("Session timer deleted");
+                }
+            },
+            _statusCountdown: function(firstTime){
+                this.getStatus(firstTime,true);
+            },
+            getStatus: function(bFirstTime, retry){
                 const oSettingsModel = this.getView().getModel("settings");
                 const oModelsModel = this.getView().getModel("models");
       
@@ -52,22 +91,41 @@ sap.ui.define([
                                 oSettingsModel.setProperty("/loaded", true);
                                 oModelsModel.setProperty("/SelectedModel",modelName);
                                 MessageToast.show(`Model ${modelName} loaded`);
+                                this.stopStatusTimer()
                             } else {
                                 oSettingsModel.setProperty("/busy", false);
+                                if(!retry){
                                 MessageToast.show(`Model status is ${Status}. Please load a model `);
+                                }else{
+                                    if(bFirstTime){
+                                    this.startStatusTimer(false)
+                                    }
+                                }
                             }
                      } ).catch(
                             (error) => {
-                                oSettingsModel.setProperty("/busy", false);
                                 console.error('Failed to fetch external data', error);
+                            if(!retry){
+                                oSettingsModel.setProperty("/busy", false);
                                 MessageToast.show(`Failed to fetch external data ${error}`);
+                            }else{
+                                if(bFirstTime){
+                                this.startStatusTimer(false)
+                                }
+                            }
                             }
                         );
                   
                     }).catch( (error) => {
+                        console.error('Failed to fetch external data', error);
+                        if(!retry){
                     oSettingsModel.setProperty("/busy", false);
-                    console.error('Failed to fetch external data', error);
                     MessageToast.show(`Failed to fetch external data ${error}`);
+                }else{
+                    if(bFirstTime){
+                    this.startStatusTimer(false)
+                    }
+                }
                 });
             },
             resetChat: function () {
@@ -97,14 +155,14 @@ sap.ui.define([
                         oSettingsModel.setProperty("/loaded", true);
                         MessageToast.show(startup_status);
                     } else {
-                        MessageBox.error("Something went wrong");
-                        oSettingsModel.setProperty("/busy", false);
+                        MessageToast.show("Please wait while model is being loaded to GPU");
                         console.error(startResult);
+                        this.startStatusTimer(true)
                     }
                 } catch (error) {
-                    oSettingsModel.setProperty("/busy", false);
+                    MessageToast.show("Please wait while model is being loaded to GPU");
                     console.error('Failed to fetch external data', error);
-                    MessageToast.show(`Failed to fetch external data ${error}`);
+                    this.startStatusTimer(true)
                 }
             },
             fetchExternalData: async function (question) {
