@@ -46,49 +46,21 @@ sap.ui.define([
                 this.getView().setModel(new JSONModel(oModelData), "models")
             },
             onAfterRendering: function(oEvent){
-                this.getStatus(false,false);
+                this.getStatus(false);
             },
-
-            restartStatusTimer: function(firstTime){
-              console.log("Session Timer will be reset");
-              if(this.intervalHandle != null){
-                this.stopStatusTimer();
-                this.startStatusTimer(firstTime);
-              }else{
-                this.startStatusTimer();
-              }
-            },
-            startStatusTimer: function(firstTime){
-                this.intervalHandle = setInterval(() =>{
-                    this._statusCountdown(firstTime);
-                    console.log("fetching new status");
-
-                }, this.countdown);
-                
-                let iSeconds = this.countdown / 1000;
-                console.log(`New status will be fetched in ${iSeconds} seconds`);
-            },
-            stopStatusTimer: function(){
-                if(this.intervalHandle != null){
-                    clearInterval(this.intervalHandle);
-                    this.intervalHandle = null;
-                    console.log("Session timer deleted");
-                }
-            },
-            _statusCountdown: function(firstTime){
-                this.getStatus(firstTime,true);
-            },
-            getStatus: function(bFirstTime, retry){
+            getStatus: function(retry){
                 const oSettingsModel = this.getView().getModel("settings");
                 const oModelsModel = this.getView().getModel("models");
-      
+                console.log(`Getting status. Retry flag: ${retry}`);
+                setTimeout(
                   fetch("/status", {
                         method: 'GET'}).then((response) =>{
                             if(response.status >= 400 && response.status < 500){
                                 MessageBox.error(`An error occurred while fetching model state. Response status: ${response.status}`);
                                 oSettingsModel.setProperty("/busy", false);
-                                this.stopStatusTimer();
-                            }
+                            }else if(response.status >= 500){
+                                this.getStatus(true)
+                            }else{
                         response.json().then( (startResult) => {
                             const { Status, modelName } = startResult;
                             if (Status === "Initialized") {
@@ -96,15 +68,13 @@ sap.ui.define([
                                 oSettingsModel.setProperty("/loaded", true);
                                 oModelsModel.setProperty("/SelectedModel",modelName);
                                 MessageToast.show(`Model ${modelName} loaded`);
-                                this.stopStatusTimer()
+                                console.log(`Model ${modelName} loaded`);
                             } else {
                                 if(!retry){
                                 MessageToast.show(`Model status is ${Status}. Please load a model `);
                                 oSettingsModel.setProperty("/busy", false);
                                 }else{
-                                    if(bFirstTime){
-                                    this.startStatusTimer(false)
-                                    }
+                                    this.getStatus(true)
                                 }
                             }
                      } ).catch(
@@ -113,13 +83,12 @@ sap.ui.define([
                             if(!retry){
                                 oSettingsModel.setProperty("/busy", false);
                                 MessageToast.show(`Failed to fetch external data ${error}`);
-                            }else{
-                                if(bFirstTime){
-                                this.startStatusTimer(false)
-                                }
+                            }else{          
+                                this.getStatus(true);
                             }
                             }
                         );
+                    }
                   
                     }).catch( (error) => {
                         console.error('Failed to fetch external data', error);
@@ -131,7 +100,7 @@ sap.ui.define([
                     this.startStatusTimer(false)
                     }
                 }
-                });
+                }), 5000);
             },
             resetChat: function () {
                 const oModel = this.getView().getModel();
@@ -162,12 +131,12 @@ sap.ui.define([
                     } else {
                         MessageToast.show("Please wait while model is being loaded to GPU");
                         console.error(startResult);
-                        this.startStatusTimer(true)
+                        this.getStatus(true)
                     }
                 } catch (error) {
                     MessageToast.show("Please wait while model is being loaded to GPU");
                     console.error('Failed to fetch external data', error);
-                    this.startStatusTimer(true)
+                    this.getStatus(true)
                 }
             },
             fetchExternalData: async function (question) {
