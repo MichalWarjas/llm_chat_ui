@@ -84,6 +84,11 @@ sap.ui.define([
       
                   fetch("/status", {
                         method: 'GET'}).then((response) =>{
+                            if(response.status >= 400 && response.status < 500){
+                                MessageBox.error(`An error occurred while fetching model state. Response status: ${response.status}`);
+                                oSettingsModel.setProperty("/busy", false);
+                                this.stopStatusTimer();
+                            }
                         response.json().then( (startResult) => {
                             const { Status, modelName } = startResult;
                             if (Status === "Initialized") {
@@ -93,9 +98,9 @@ sap.ui.define([
                                 MessageToast.show(`Model ${modelName} loaded`);
                                 this.stopStatusTimer()
                             } else {
-                                oSettingsModel.setProperty("/busy", false);
                                 if(!retry){
                                 MessageToast.show(`Model status is ${Status}. Please load a model `);
+                                oSettingsModel.setProperty("/busy", false);
                                 }else{
                                     if(bFirstTime){
                                     this.startStatusTimer(false)
