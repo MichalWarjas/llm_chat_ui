@@ -96,9 +96,7 @@ sap.ui.define([
                     oSettingsModel.setProperty("/busy", false);
                     MessageToast.show(`Failed to fetch external data ${error}`);
                 }else{
-                    if(bFirstTime){
-                    this.startStatusTimer(false)
-                    }
+                 this.getStatus(true);
                 }
                 }), 5000);
             },
