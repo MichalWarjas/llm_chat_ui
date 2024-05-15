@@ -52,7 +52,7 @@ sap.ui.define([
                 const oSettingsModel = this.getView().getModel("settings");
                 const oModelsModel = this.getView().getModel("models");
                 console.log(`Getting status. Retry flag: ${retry}`);
-                setTimeout(
+                setTimeout(() =>{
                   fetch("/status", {
                         method: 'GET'}).then((response) =>{
                             if(response.status >= 400 && response.status < 500){
@@ -98,7 +98,7 @@ sap.ui.define([
                 }else{
                  this.getStatus(true);
                 }
-                }), 5000);
+                })}, 5000);
             },
             resetChat: function () {
                 const oModel = this.getView().getModel();
