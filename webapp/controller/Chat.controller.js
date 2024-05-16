@@ -55,10 +55,10 @@ sap.ui.define([
                 setTimeout(() =>{
                   fetch("/status", {
                         method: 'GET'}).then((response) =>{
-                            if(response.status >= 400 && response.status < 500){
+                            if(response.status >= 400 && response.status < 503){
                                 MessageBox.error(`An error occurred while fetching model state. Response status: ${response.status}`);
                                 oSettingsModel.setProperty("/busy", false);
-                            }else if(response.status >= 500){
+                            }else if(response.status >= 503){
                                 this.getStatus(true)
                             }else{
                         response.json().then( (startResult) => {
