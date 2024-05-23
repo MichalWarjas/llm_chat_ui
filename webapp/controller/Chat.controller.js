@@ -39,11 +39,30 @@ sap.ui.define([
                         {
                             "ModelId": "models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf",
                             "Name": "bielik-7b-instruct-v0.1.Q8_0.gguf"
+                        },
+                        {
+                            "ModelId": "models/8B/Phi-3-medium-4k-instruct-Q6_K.gguf",
+                            "Name": "Phi-3-medium-4k-instruct-Q6_K.gguf"
                         }
                     ]
                 };
 
-                this.getView().setModel(new JSONModel(oModelData), "models")
+                this.getView().setModel(new JSONModel(oModelData), "models");
+
+                this.disclaimerMessage();
+            },
+            disclaimerMessage: function () {
+                MessageBox.warning(
+                    "Initial button focus is set by attribute \n initialFocus: sap.m.MessageBox.Action.CANCEL",
+                    {
+                        icon: MessageBox.Icon.WARNING,
+                        title: "Dislaimer",
+                        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                        emphasizedAction: MessageBox.Action.OK,
+                        initialFocus: MessageBox.Action.CANCEL,
+                        styleClass: sResponsivePaddingClasses
+                    }
+                );
             },
             onAfterRendering: function(oEvent){
                 this.getStatus(false);
