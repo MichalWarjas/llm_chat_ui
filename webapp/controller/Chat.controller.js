@@ -137,6 +137,66 @@ sap.ui.define([
                     this.getStatus(true)
                 }
             },
+            getAnswer: function(){
+                const oSettingsModel = this.getView().getModel("settings");
+                setTimeout(() =>{
+                  fetch("/answer", {
+                        method: 'GET'}).then((response) =>{
+                            if(response.status >= 400 && response.status < 503){
+                                MessageBox.error(`An error occurred while getting response. Response status: ${response.status}`);
+                                oSettingsModel.setProperty("/busy", false);
+                            }else if(response.status >= 503){
+                                this.getAnswer()
+                            }else{
+                        response.json().then( (aiResponse) => {
+                            const { generated_response } = aiResponse;
+                            console.log(aiResponse);
+                            if(generated_response === "Initial"){
+                                MessageBox.error("Something went wrong please try again");
+                                oSettingsModel.setProperty("/busy", false);
+                            }else if(generated_response === "Running"){
+                                this.getAnswer();
+                            }else{
+                                var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
+                                var oDate = new Date();
+                                var sDate = oFormat.format(oDate);    
+                            var oEntry = {
+                                Author: "Helpful assistant",
+                                AuthorPicUrl: "./pictures/helpful_assistant.jpg",
+                                Type: "Reply",
+                                Date: "" + sDate,
+                                Text: generated_response
+                            };
+        
+                            // update model
+                            var oModel = this.getView().getModel();
+                            var aEntries = oModel.getData().EntryCollection;
+                            if (aEntries && aEntries.length > 0) {
+                                aEntries.unshift(oEntry);
+                            } else {
+                                aEntries = [oEntry];
+                            }
+                            oModel.setData({
+                                EntryCollection: aEntries
+                            });
+                            oSettingsModel.setProperty("/busy", false);
+                        }
+                     } ).catch(
+                            (error) => {
+                                console.error('Failed to fetch external data', error);
+                                oSettingsModel.setProperty("/busy", false);
+                                MessageToast.show(`Failed to fetch external data ${error}`);  
+                            }
+                        );
+                    }
+                  
+                    }).catch( (error) => {
+                        console.error('Failed to fetch external data', error);
+                    oSettingsModel.setProperty("/busy", false);
+                    MessageToast.show(`Failed to fetch external data ${error}`);
+       
+                })}, 2500);
+            },
             fetchExternalData: async function (question) {
                 var oSettingsModel = this.getView().getModel("settings");
                 var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
@@ -153,6 +213,11 @@ sap.ui.define([
                     const aiResponse = await response.json();
                     const { generated_response } = aiResponse;
                     console.log(aiResponse);
+                    if(generated_response === "Initial"){
+                        MessageToast.show("Something went wrong please try again");
+                    }else if(generated_response === "Running"){
+                        this.getAnswer();
+                    }else{
                     var oEntry = {
                         Author: "Helpful assistant",
                         AuthorPicUrl: "./pictures/helpful_assistant.jpg",
@@ -173,6 +238,7 @@ sap.ui.define([
                         EntryCollection: aEntries
                     });
                     oSettingsModel.setProperty("/busy", false);
+                }
                 } catch (error) {
                     oSettingsModel.setProperty("/busy", false);
                     console.error('Failed to fetch external data', error);
