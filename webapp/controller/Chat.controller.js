@@ -64,11 +64,10 @@ sap.ui.define([
                         response.json().then( (startResult) => {
                             const { Status, modelName } = startResult;
                             if (Status === "Initialized") {
-                                oSettingsModel.setProperty("/busy", false);
-                                oSettingsModel.setProperty("/loaded", true);
                                 oModelsModel.setProperty("/SelectedModel",modelName);
                                 MessageToast.show(`Model ${modelName} loaded`);
                                 console.log(`Model ${modelName} loaded`);
+                                this.getAnswer(true);
                             } else {
                                 if(!retry){
                                 MessageToast.show(`Model status is ${Status}. Please load a model `);
@@ -137,7 +136,7 @@ sap.ui.define([
                     this.getStatus(true)
                 }
             },
-            getAnswer: function(){
+            getAnswer: function(first_time){
                 const oSettingsModel = this.getView().getModel("settings");
                 setTimeout(() =>{
                   fetch("/answer", {
@@ -152,11 +151,24 @@ sap.ui.define([
                             const { generated_response } = aiResponse;
                             console.log(aiResponse);
                             if(generated_response === "Initial"){
+                                if(first_time){
+                                    oSettingsModel.setProperty("/busy", false);
+                                    oSettingsModel.setProperty("/loaded", true);
+                                }else{
                                 MessageBox.error("Something went wrong please try again");
                                 oSettingsModel.setProperty("/busy", false);
+                                }
                             }else if(generated_response === "Running"){
+                                if(first_time){
+                                    MessageToast.show("It looks someone else is already using the app. Please try again later");
+                                }else{
                                 this.getAnswer();
+                                }
                             }else{
+                                if(first_time){
+                                    oSettingsModel.setProperty("/busy", false);
+                                    oSettingsModel.setProperty("/loaded", true);
+                                }else{
                                 var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
                                 var oDate = new Date();
                                 var sDate = oFormat.format(oDate);    
@@ -180,6 +192,7 @@ sap.ui.define([
                                 EntryCollection: aEntries
                             });
                             oSettingsModel.setProperty("/busy", false);
+                        }
                         }
                      } ).catch(
                             (error) => {
