@@ -22,37 +22,37 @@ sap.ui.define([
                 this.getView().setModel(oSettingsModel, "settings");
 
                 var oModelData = {
-                    "SelectedModel": "models/8B/Phi-3-medium-4k-instruct-Q6_K.gguf",
+                    "SelectedModel": "models/8B/dolphin-2.9-llama3-8b-q8_0.gguf",
                     "ModelCollection": [
                         {
                             "ModelId": "models/7B/Mistral-7B-Instruct-v0.3-Q6_K.gguf",
                             "Name": "Mistral-7B-Instruct-v0.3-Q6_K.gguf",
-                            "order": 1
+                            "order": 11
                         },
                         {
                             "ModelId": "models/4B/Phi-3-mini-4k-instruct-fp16.gguf",
                             "Name": "Phi-3-mini-4k-instruct-fp16.gguf",
-                            "order": 2
+                            "order": 12
                         },
                         {
                             "ModelId": "models/8B/dolphin-2.9-llama3-8b-q8_0.gguf",
                             "Name": "dolphin-2.9-llama3-8b-q8_0.gguf",
-                            "order": 3
+                            "order": 9
                         },
                         {
                             "ModelId": "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf",
                             "Name": "mistral-7b-instruct-v0.2.Q5_K_M.gguf",
-                            "order": 5
+                            "order": 15
                         },
                         {
                             "ModelId": "models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf",
                             "Name": "bielik-7b-instruct-v0.1.Q8_0.gguf",
-                            "order": 4
+                            "order": 14
                         },
                         {
                             "ModelId": "models/8B/Phi-3-medium-4k-instruct-Q6_K.gguf",
                             "Name": "Phi-3-medium-4k-instruct-Q6_K.gguf",
-                            "order": 0
+                            "order": 10
                         }
                     ]
                 };
