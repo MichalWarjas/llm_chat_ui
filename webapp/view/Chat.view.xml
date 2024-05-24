@@ -16,7 +16,7 @@
 					selectedKey="{models>/SelectedModel}"
 					items="{
 						path: 'models>/ModelCollection',
-						sorter: { path: 'models>Name' }
+						sorter: { path: 'models>order' }
 					}">
 					<core:Item id="_IDGenItem1" key="{models>ModelId}" text="{models>Name}" />
 				</Select>
