@@ -83,8 +83,9 @@ sap.ui.define([
                 const oModelsModel = this.getView().getModel("models");
                 console.log(`Getting status. Retry flag: ${retry}`);
                 let currentlySelected = oModelsModel.getProperty("/SelectedModel");
+                let cacheBuster = btoa(new Date().getTime());
                 setTimeout(() =>{
-                  fetch("/status", {
+                  fetch(`/status?vp=${cacheBuster}`, {
                         method: 'GET'}).then((response) =>{
                             if(response.status >= 400 && response.status < 503){
                                 MessageBox.error(`An error occurred while fetching model state. Response status: ${response.status}`);
@@ -144,8 +145,9 @@ sap.ui.define([
                 var oSettingsModel = this.getView().getModel("settings");
                 this.resetChat();
                 oSettingsModel.setProperty("/busy", true);
+                let cacheBuster = btoa(new Date().getTime());
                 try {
-                    const response = await fetch("/loadmodel", {
+                    const response = await fetch(`/loadmodel?vp=${cacheBuster}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -171,8 +173,9 @@ sap.ui.define([
             },
             getAnswer: function(first_time){
                 const oSettingsModel = this.getView().getModel("settings");
+                let cacheBuster = btoa(new Date().getTime());
                 setTimeout(() =>{
-                  fetch("/answer", {
+                  fetch(`/answer?vp=${cacheBuster}`, {
                         method: 'GET'}).then((response) =>{
                             if(response.status >= 400 && response.status < 503){
                                 MessageBox.error(`An error occurred while getting response. Response status: ${response.status}`);
@@ -248,8 +251,9 @@ sap.ui.define([
                 var oFormat = DateFormat.getDateTimeInstance({ style: "medium" });
                 var oDate = new Date();
                 var sDate = oFormat.format(oDate);
+                let cacheBuster = btoa(new Date().getTime());
                 try {
-                    const response = await fetch("/generate", {
+                    const response = await fetch(`/generate?vp=${cacheBuster}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -328,8 +332,9 @@ sap.ui.define([
             },
             onInitializeModel: async function(oEvent){
                 var oSettingsModel = this.getView().getModel("settings");
+                let cacheBuster = btoa(new Date().getTime());
                 try {
-                    const response = await fetch("/initialize", {
+                    const response = await fetch(`/initialize?vp=${cacheBuster}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
