@@ -102,8 +102,10 @@ sap.ui.define([
                             } else {
                                 if(!retry){
                                 MessageToast.show(`Model status is ${Status}. Loading model ${currentlySelected} `);
+                                this.loadModel();
+                                }else{
+                                this.getStatus(true);
                                 }
-                                this.getStatus(true)
                                 
                             }
                      } ).catch(
