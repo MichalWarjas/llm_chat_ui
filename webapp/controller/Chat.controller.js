@@ -146,6 +146,7 @@ sap.ui.define([
             loadModel: async function () {
                 let llm = this.getView().getModel("models").getProperty("/SelectedModel");
                 var oSettingsModel = this.getView().getModel("settings");
+                this.resetChat();
                 oSettingsModel.setProperty("/busy", true);
                 try {
                     const response = await fetch("/loadmodel", {
