@@ -21,7 +21,7 @@ sap.ui.define([
                 this.getView().setModel(oSettingsModel, "settings");
 
                 var oModelData = {
-                    "SelectedModel": "models/8B/dolphin-2.9-llama3-8b-q8_0.gguf",
+                    "SelectedModel": "models/8B/Phi-3-medium-4k-instruct-Q6_K.gguf",
                     "ModelCollection": [
                         {
                             "ModelId": "models/7B/Mistral-7B-Instruct-v0.3-Q6_K.gguf",
@@ -82,6 +82,7 @@ sap.ui.define([
                 const oSettingsModel = this.getView().getModel("settings");
                 const oModelsModel = this.getView().getModel("models");
                 console.log(`Getting status. Retry flag: ${retry}`);
+                let currentlySelected = oModelsModel.getProperty("/SelectedModel");
                 setTimeout(() =>{
                   fetch("/status", {
                         method: 'GET'}).then((response) =>{
@@ -100,11 +101,10 @@ sap.ui.define([
                                 this.getAnswer(true);
                             } else {
                                 if(!retry){
-                                MessageToast.show(`Model status is ${Status}. Please load a model `);
-                                oSettingsModel.setProperty("/busy", false);
-                                }else{
-                                    this.getStatus(true)
+                                MessageToast.show(`Model status is ${Status}. Loading model ${currentlySelected} `);
                                 }
+                                this.getStatus(true)
+                                
                             }
                      } ).catch(
                             (error) => {
