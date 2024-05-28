@@ -8,7 +8,6 @@
         <App id="app">
             <pages>
                 <Page id="page" title="{i18n>title}">
-		<headerContent>
 		<OverflowToolbar id="_IDGenOverflowToolbar1" enabled="{= ${settings>/busy}?false:true }">
 		<Label id="_IDGenLabel1" text="Model" labelFor="modelSelect"></Label>
 		<Select		id="modelSelect"
@@ -19,14 +18,22 @@
 						sorter: { path: 'models>order' }
 					}">
 					<core:Item id="_IDGenItem1" key="{models>ModelId}" text="{models>Name}" />
+			<layoutData>
+				<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData1" priority="NeverOverflow"/>
+			</layoutData>
 				</Select>
 		<Button id="_loadButton" text="Load model" press="loadModel"/>
-		<ToolbarSeparator id="_IDGenToolbarSeparator1" />
-		<Button id="_resetButton" text="Reset conversation" press="resetChat"/>
-		<ToolbarSeparator id="_IDGenToolbarSeparator2" ></ToolbarSeparator>
-		<Button id="_IDGenButton1"  text="Initialize model" press=".onInitializeModel" type="Reject"></Button>
+		<ToolbarSeparator id="_IDGenToolbarSeparator1"/>
+		<Button id="_resetButton" text="Reset conversation" press="resetChat">
+		<layoutData>
+				<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData2" priority="{= ${device>/system/phone} === true ? 'Low' : 'NeverOverflow' }"/>
+			</layoutData></Button>
+		<ToolbarSpacer id="_IDGenToolbarSeparator2" />
+		<Button id="_IDGenButton1"  text="Initialize model" press=".onInitializeModel" type="Reject">
+		<layoutData>
+				<OverflowToolbarLayoutData id="_IDGenOverflowToolbarLayoutData4" priority="{= ${device>/system/phone} === true ? 'Low' : 'NeverOverflow' }"/>
+			</layoutData></Button>
 		</OverflowToolbar>
-		</headerContent>
                     <content>
                     	<FeedInput id="_IDGenFeedInput1"
 		post="onPost"

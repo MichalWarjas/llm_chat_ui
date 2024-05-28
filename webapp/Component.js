@@ -16,6 +16,9 @@ sap.ui.define([
              * @public
              * @override
              */
+            getContentDensityClass() {
+                return Device.support.touch ? "sapUiSizeCozy" : "sapUiSizeCompact";
+            },
             init: function () {
                 // call the base component's init function
                 UIComponent.prototype.init.apply(this, arguments);

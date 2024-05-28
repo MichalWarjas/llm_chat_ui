@@ -13,9 +13,8 @@ sap.ui.define([
             countdown: 5000,
             intervalHandle: null,
 
-
-
             onInit: function () {
+                this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
                 var oModel = new JSONModel();
                 var oSettingsModel = new JSONModel({ new_topic: true, busy: true, loaded: false })
                 this.getView().setModel(oModel);
@@ -26,33 +25,28 @@ sap.ui.define([
                     "ModelCollection": [
                         {
                             "ModelId": "models/7B/Mistral-7B-Instruct-v0.3-Q6_K.gguf",
-                            "Name": "Mistral-7B-Instruct-v0.3-Q6_K.gguf",
+                            "Name": "Mistral-7B",
                             "order": 11
                         },
                         {
                             "ModelId": "models/4B/Phi-3-mini-4k-instruct-fp16.gguf",
-                            "Name": "Phi-3-mini-4k-instruct-fp16.gguf",
+                            "Name": "Phi-3-mini",
                             "order": 12
                         },
                         {
                             "ModelId": "models/8B/dolphin-2.9-llama3-8b-q8_0.gguf",
-                            "Name": "dolphin-2.9-llama3-8b-q8_0.gguf",
+                            "Name": "dolphin-2.9-8B",
                             "order": 9
                         },
                         {
-                            "ModelId": "models/7B/mistral-7b-instruct-v0.2.Q5_K_M.gguf",
-                            "Name": "mistral-7b-instruct-v0.2.Q5_K_M.gguf",
-                            "order": 15
-                        },
-                        {
                             "ModelId": "models/7B/bielik-7b-instruct-v0.1.Q8_0.gguf",
-                            "Name": "bielik-7b-instruct-v0.1.Q8_0.gguf",
+                            "Name": "bielik-7b",
                             "order": 14
                         },
                         {
                             "ModelId": "models/8B/Phi-3-medium-4k-instruct-Q6_K.gguf",
-                            "Name": "Phi-3-medium-4k-instruct-Q6_K.gguf",
-                            "order": 10
+                            "Name": "Phi-3-medium",
+                            "order": 8
                         }
                     ]
                 };
