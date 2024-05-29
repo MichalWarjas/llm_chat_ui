@@ -7,7 +7,7 @@
 >
         <App id="app">
             <pages>
-                <Page id="page" title="{i18n>title}">
+                <Page id="page" title="{i18n>title}" visible="{= ${settings>/confirmed}?true:false }">
 		<OverflowToolbar id="_IDGenOverflowToolbar1" enabled="{= ${settings>/busy}?false:true }">
 		<Label id="_IDGenLabel1" text="Model" labelFor="modelSelect"></Label>
 		<Select		id="modelSelect"

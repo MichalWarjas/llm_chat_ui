@@ -16,7 +16,7 @@ sap.ui.define([
             onInit: function () {
                 this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
                 var oModel = new JSONModel();
-                var oSettingsModel = new JSONModel({ new_topic: true, busy: true, loaded: false })
+                var oSettingsModel = new JSONModel({ new_topic: true, busy: true, loaded: false, confirmed:true })
                 this.getView().setModel(oModel);
                 this.getView().setModel(oSettingsModel, "settings");
 
@@ -65,18 +65,40 @@ sap.ui.define([
                     
                     In case of any uncertainties or concerns during your interaction with our application, please do not hesitate to reach out for assistance. We encourage you to use this tool responsibly and enjoy exploring its capabilities!
                     
-                    Now that you're familiar with the key aspects of using this platform, let's dive in and start interacting with these powerful language models!`,
+                    Now that you're familiar with the key aspects of using this platform, let's dive in and start interacting with these powerful language models!
+
+                    Please click "OK" if you understood and accept the information above. Otherwise click "ABORT" to disable the application.
+                    
+                    Models licenses details are available below:
+                    
+                    `,
                     {
                         icon: MessageBox.Icon.WARNING,
                         title: "Dislaimer",
-                        actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+                        details: `Licenses:
+                        <ul>
+                        <li>Phi models: <a href="//huggingface.co/microsoft/Phi-3-medium-4k/resolve/main/LICENSE">MIT License </a></li>
+                        <li>bielik-7b-instruct-v0.1.Q8_0.gguf:  <a href="//spdx.org/licenses/CC-BY-NC-4.0">CC BY NC 4.0 (non-commercial use)</a></li>
+                        <li>dolphin-2.9-llama3-8b-q8_0.gguf: META LLAMA 3 COMMUNITY LICENSE AGREEMENT</li>
+                        <li>Mistral-7B-Instruct-v0.3-Q6_K.gguf: <a href="//huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/apache-2.0.md"> apache-2.0 </a></li>
+                        </ul>`,
+                        actions: [MessageBox.Action.OK, MessageBox.Action.ABORT],
                         emphasizedAction: MessageBox.Action.OK,
-                        initialFocus: MessageBox.Action.CANCEL
+                        initialFocus: MessageBox.Action.ABORT,
+                        onClose: this.onDisclaimerClose.bind(this)
                     }
                 );
             },
+            onDisclaimerClose: function(oEvent){
+                const oSettingsModel = this.getView().getModel("settings");
+                if(oEvent === "ABORT"){
+                    oSettingsModel.setProperty("/confirmed",false);
+                    MessageBox.error("Application disabled due to the user disclaimer disagreement");
+                }else{
+                    this.getStatus(false);
+                }
+            },
             onAfterRendering: function(oEvent){
-                this.getStatus(false);
             },
             getStatus: function(retry){
                 const oSettingsModel = this.getView().getModel("settings");
