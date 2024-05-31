@@ -12,6 +12,7 @@ sap.ui.define([
 
             countdown: 5000,
             intervalHandle: null,
+            wrapper_counter: 0,
 
             onInit: function () {
                 this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
@@ -193,6 +194,19 @@ sap.ui.define([
                     this.getStatus(true)
                 }
             },
+            wrapCode: function(input_text){
+
+              let wrapped_text = input_text.replaceAll("```", () =>{
+                if(this.wrapper_counter % 2 === 0){
+                    return "<code>";
+                }else{
+                    return "</code>"
+                }
+              });  
+
+              return wrapped_text;
+
+            },
             getAnswer: function(first_time){
                 const oSettingsModel = this.getView().getModel("settings");
                 let cacheBuster = btoa(new Date().getTime());
@@ -235,7 +249,7 @@ sap.ui.define([
                                 AuthorPicUrl: "./pictures/helpful_assistant.jpg",
                                 Type: "Reply",
                                 Date: "" + sDate,
-                                Text: generated_response
+                                Text: this.wrapCode(generated_response)
                             };
         
                             // update model
@@ -295,7 +309,7 @@ sap.ui.define([
                         AuthorPicUrl: "./pictures/helpful_assistant.jpg",
                         Type: "Reply",
                         Date: "" + sDate,
-                        Text: generated_response
+                        Text: this.wrapCode(generated_response)
                     };
 
                     // update model
