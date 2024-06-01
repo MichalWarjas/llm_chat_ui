@@ -200,11 +200,14 @@ sap.ui.define([
             wrapCode: function(input_text){
 
               let wrapped_text = input_text.replaceAll("```", () =>{
+                let codeMarkup
                 if(this.wrapper_counter % 2 === 0){
-                    return "<code>";
+                    codeMarkup = "<code>";
                 }else{
-                    return "</code>"
+                    codeMarkup = "</code>"
                 }
+                this.wrapper_counter += 1;
+                return codeMarkup;
               });  
 
               return wrapped_text;
