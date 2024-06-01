@@ -110,11 +110,14 @@ sap.ui.define([
                 setTimeout(() =>{
                   fetch(`/status?vp=${cacheBuster}`, {
                         method: 'GET'}).then((response) =>{
-                            if(response.status >= 400 && response.status < 503){
+                            if(response.status >= 400 && response.status < 502){
                                 MessageBox.error(`An error occurred while fetching model state. Response status: ${response.status}`);
                                 oSettingsModel.setProperty("/busy", false);
-                            }else if(response.status >= 503){
+                            }else if(response.status > 503){
                                 this.getStatus(true)
+                            }else if(response.status === 502 || response.status === 503){
+                                MessageBox.error(`AI service has been temporary switched off due to technical resources limitations. Please try again later or contact developer at warjas.michal.dev@gmail.com`);
+                                oSettingsModel.setProperty("/busy", false);
                             }else{
                         response.json().then( (startResult) => {
                             const { Status, modelName } = startResult;
