@@ -47,6 +47,11 @@ sap.ui.define([
                         {
                             "ModelId": "models/8B/Phi-3-medium-4k-instruct-Q6_K.gguf",
                             "Name": "Phi-3-medium",
+                            "order": 10
+                        },
+                        {
+                            "ModelId": "models/22B/Codestral-22B-v0.1-Q5_K_S.gguf",
+                            "Name": "Codestral-22B",
                             "order": 8
                         }
                     ]
