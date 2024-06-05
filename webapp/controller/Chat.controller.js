@@ -197,6 +197,14 @@ sap.ui.define([
                     this.getStatus(true)
                 }
             },
+            escapeHtml: function(unsafe) {
+                return unsafe
+                  .replace(/&/g, "&amp;") // Replace '&' with &amp;
+                  .replace(/</g, "&lt;")   // Replace '<' with &lt;
+                  .replace(/>/g, "&gt;")   // Replace '>' with &gt;
+                  .replace(/"/g, "&quot;") // Replace '"' with &quot;
+                  .replace(/'/g, "&#039;"); // Replace ''' with &#039;
+              },
             wrapCode: function(input_text){
 
               let wrapped_text = input_text.replaceAll("```", () =>{
@@ -255,7 +263,7 @@ sap.ui.define([
                                 AuthorPicUrl: "./pictures/helpful_assistant.jpg",
                                 Type: "Reply",
                                 Date: "" + sDate,
-                                Text: this.wrapCode(generated_response)
+                                Text: this.wrapCode(this.escapeHtml(generated_response))
                             };
         
                             // update model
@@ -315,7 +323,7 @@ sap.ui.define([
                         AuthorPicUrl: "./pictures/helpful_assistant.jpg",
                         Type: "Reply",
                         Date: "" + sDate,
-                        Text: this.wrapCode(generated_response)
+                        Text: this.wrapCode(this.escapeHtml(generated_response))
                     };
 
                     // update model
@@ -343,7 +351,7 @@ sap.ui.define([
                 var oDate = new Date();
                 var sDate = oFormat.format(oDate);
                 // create new entry
-                var sValue = oEvent.getParameter("value");
+                var sValue = this.wrapCode(this.escapeHtml(oEvent.getParameter("value")));
                 let new_topic = oSettingsModel.getProperty("/new_topic");
                 const myQuestion = { "user_input": sValue, "new_topic": new_topic };
 
